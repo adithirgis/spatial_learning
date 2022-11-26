@@ -15,7 +15,7 @@ format:
     preview-links: true
     hash-type: number
     hash-one-based-index: true
-    footer: "[adithiru.com/analysing_spatial_data](https://adithiru.com/talk/2022-thinking-big)"
+    footer: "[adithiru.com/analysing_spatial_data](https://adithi-spatial-learning.netlify.app/)"
     navigation-mode: linear
     incremental: true
 # title-slide-attributes: 
