@@ -1,0 +1,259 @@
+---
+pagetitle: "Analysing spatial data to address environmental issues"
+author: Adithi R. Upadhya
+date: 28 Nov 2022
+format:
+  revealjs:
+    self-contained: true
+    theme: ["default", "css/styling.scss"]
+    history: false
+    controls: true
+    controls-layout: bottom-right
+    code-overflow: wrap
+    df-print: kable
+    touch: true
+    preview-links: true
+    hash-type: number
+    hash-one-based-index: true
+    footer: "[adithiru.com/analysing_spatial_data](https://adithiru.com/talk/2022-thinking-big)"
+    navigation-mode: linear
+    incremental: true
+# title-slide-attributes: 
+#   data-background-image: img/on_road_bc.png
+#   data-background-size: cover
+execute:
+  echo: false
+editor_options: 
+  chunk_output_type: console
+---
+
+#  {.center-x background-image="img/on_road_bc.png"}
+
+::: bg-box
+<h1>`r rmarkdown::metadata$pagetitle`</h1>
+
+<h2>`r rmarkdown::metadata$subtitle`</h2>
+
+------------------------------------------------------------------------
+
+<h3>`r rmarkdown::metadata$author`</h3>
+
+<h3>`r rmarkdown::metadata$date`</h3>
+:::
+
+::: footer
+:::
+
+
+## Outline {.center .center-x}
+
+::: nonincremental
+-   Why and how we model air pollution
+    -   Data collection, algorithms, input data
+-   Implementation in R
+    -   Shiny apps, reproducible codes\
+-   Implementation in Earth Engine and QGIS
+    -   Data retrieval and visualization
+:::
+
+## Project details {.center .center-x}
+
+-   Set up an air quality sensor network and conducted `100+` days of mobile monitoring of air pollutants in urban Bangalore.
+-   Build Land Use Regression (LUR) models which are statistical methods to estimate air pollution concentrations by relating the concentrations with several predictors, including land-use, traffic, satellite retrievals, etc.
+-   Estimate air pollution for Bangalore at `50 m` for the year `2021-2022` using ambient and mobile monitoring.
+
+
+## Study Area {.center .center-x}
+
+![](img/Study Area Google 2.jpeg){fig-align="center"}
+
+
+## Flow {.center .center-x}
+
+```{mermaid}
+%%| fig-width: 10
+flowchart LR
+  A[Ambient] --> C(LUR variables)
+  C --> D(training)
+  D --> E(validation)
+  E --> F(prediction monthly)
+```
+
+```{mermaid}
+%%| fig-width: 10
+flowchart LR
+  A[Mobile monitoring] --> C(LUR variables)
+  C --> D(training)
+  D --> E(validation)
+  E --> F(prediction)
+```
+
+## Data Collection {.center .center-x}
+
+![](img/instrument.jpg){fig-align="center"}
+
+## Data Correction {.center .center-x}
+
+![](img/corrections.png){fig-align="center"}
+
+## [mmaqshiny](https://joss.theoj.org/papers/10.21105/joss.02250) {.center .center-x}
+
+![](img/mmaqshiny1.jpg){fig-align="center"}
+
+## Near real time check {.center .center-x}
+
+![](img/mmaqshiny2.jpg){fig-align="center"}
+
+## Aggregation {.center .center-x}
+
+![](img/snapping.jpg){fig-align="center"}
+
+## Earth Engine {.center .center-x}
+
+![](img/lulc.jpg){fig-align="center"}
+
+::: {.notes}
+All remote sensing parameters were derived using Earth Engine to reduce time consumption. 
+:::
+
+## Variables
+
+::: panel-tabset
+### Spatial
+
+::: nonincremental
+-   Other variables (airport, industries)
+-   Road length (with buffers)
+-   Rail length (with buffers)
+-   Population (with buffers)
+-   Elevation
+:::
+
+### Spatio-temporal
+
+::: nonincremental
+-   Normalized difference vegetation index (NDVI) (with buffers)
+-   Night Time Light Intensity (NTLI)
+-   Land Cover (with buffers)
+-   Aerosol Optical Depth (AOD)
+-   Meteorology
+-   NO~2~
+:::
+:::
+
+## Predictors / Variables {.center .center-x}
+
+![](img/parameters_2.jpg){fig-align="center"}
+
+## Land Use Regression {.center .center-x}
+
+::: nonincremental
+`Air pollutants concentration = f(land use, road length, meteorological variables)`
+
+![](img/lur.jpg){fig-align="center"}
+:::
+
+::: footer
+:::
+
+## Model example - Supervised Linear Regression {.center .center-x}
+
+::: nonincremental
+
+- Eeftens, M., Beelen, R., De Hoogh, K., Bellander, T., Cesaroni, G., Cirach, M., ... & Hoek, G. (2012). Development of land use regression models for PM2.5, PM2.5 absorbance, PM10 and PMcoarse in 20 European study areas; results of the ESCAPE project. Environmental Science & Technology, 46(20), 11195-11205. https://doi.org/10.1021/es301948k 
+
+::: {.notes}
+
+1.  Linear regression models were developed using a supervised forward selection procedure, first evaluating univariate regressions and the corrected average concentrations were evaluated against all eligible potential predictors.
+2. Here we implemented Supervised Linear Regression, Random forest. The procedure is similar for all. 
+3.  The predictor giving the highest adjusted explained variance (adjusted R\^2) was selected for inclusion in the model if the direction of effect was as defined a priori and the p-value was greater than a certain value.
+4.  Subsequently, we evaluated if any of the remaining predictor variables further improved the model adjusted R\^2 by at least 1 %.
+5.  Again, we selected the predictor giving the highest gain in adjusted R\^2, if it had a p-value greater than a value and the expected direction of effect.
+6.  Additional variables were not selected if they changed the direction of effect of one of the previously included variables.
+7.  This process continued until there were no more variables which fit the criteria, and improved the model adjusted R\^2 by at least 1 %.
+8.  As final steps, variables with a p-value above the selected value were removed from the model.
+9.  Furthermore, we checked that all Variance Inflation Factors (VIF) to ensure the absence of collinearity, and that Cook's Distance values were below generated, to ensure the absence of highly influential observations disproportionately influencing a specific variable's coefficient.
+10.  The Moran's I statistic was calculated to indicate spatial autocorrelation of the model residuals.
+
+:::
+
+:::
+
+
+## Validation and Prediction {.center .center-x}
+
+::: nonincremental
+
+- Model performance was evaluated by leave-one-out cross validation (LOOCV), where each site was sequentially left out from the model while the included variables were left unchanged. 
+- For mobile monitoring data we conducted 10-fold cross validation by randomly splitting the road types. 
+- Models with adjusted R^2^ more than equal to `0.3` were used to predict at `50 m` for urban Bangalore area. 
+
+:::
+
+## Mobile Monitoring (MM) models {.center .center-x}
+
+![](img/output_2.jpg){fig-align="center"}
+
+## Prediction map (MM) visualised using QGIS {.center .center-x}
+
+![](img/output_3.jpg){fig-align="center"}
+
+## Prediction map {.center .center-x}
+
+![](img/zoom_on_road_ufp.png){fig-align="center"}
+
+## Implementation {.center .center-x}
+
+- Using `tidyverse` and parallel processing
+- Using `Geopackage` instead of shapefile or Geojson
+- Using `Postgres` as the database
+- Using `Earth Engine` for high resolution processed data retrieval
+
+## Other models {.center .center-x}
+
+- Machine learning model:
+  - `Random forest`
+- Geostatistical model:
+  - `Geographically weighted regression`
+  
+::: {.notes}
+
+- RF:
+
+1. Random forest is an ensemble tree based machine learning model which can deal with highly correlated variables by randomly selecting a subset of variables at each split node of a tree.
+2. The regression trees are built using bootstrapping the training data and the unused data is called as out-of-bag data. We used the OOB root mean square error (RMSE) to optimize the hyperparameters (using a grid search method for optimizing the number of trees: ntree and the number of variables being split at each node (mtry) due to their higher effect on model performance) that lead to least OOB RMSE. For this we used `ranger` package in R, to train RF. 
+3. We used all the variables in this model as machine learning models can tackle correlated variables very well. 
+4. Variable importance was measured by averaging a variable's total decrease in the remaining mean square errors (MSE) left after the variable was used as the node split. 
+
+
+- GWR: 
+
+1. In GWR we used spatially varying coefficient values estimated using a weight function. 
+2. The weight function assigns a higher weights to points spatially closer to each other. 
+3. This function decays with Euclidean distance based on a predefined kernel function (this determines the relation between distance and weight) and bandwidth (this controls the rate at which kernel function decays). We used an exponential function for the kernel function to show decrease in weight with increasing distance. 
+4. We used 200 km × 200 km grids for the spatially-varying coefficient values of the linear regression. We used functions in the `GWmodel` package train GWR. 
+
+:::
+
+## Thank you! {.center .center-x .nostretch background-image="img/on_road_bc.png" background-opacity="0.2"}
+
+[`r fontawesome::fa("link", a11y = "sem")` adithiru.com](https://adithirugis.netlify.app/)<br/>[`r fontawesome::fa("twitter", a11y = "sem")` \@AdithiUpadhya](https://twitter.com/AdithiUpadhya)<br/> [`r fontawesome::fa("github", a11y = "sem")` \@adithirgis](https://github.com/adithirgis)
+
+::: footer
+:::
+
+## Land Use Regression Variables 1 {.center .center-x}
+
+::: nonincremental
+
+![](img/para_extra1.jpg){fig-align="center"}
+:::
+
+
+## Land Use Regression Variables 2 {.center .center-x}
+
+::: nonincremental
+
+![](img/para_extra2.jpg){fig-align="center"}
+:::
+
