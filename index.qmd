@@ -231,7 +231,7 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 ## Implementation {.center .center-x}
 
 - Using [`tidyverse`](https://www.tidyverse.org/) and parallel processing
-- Using [`tmap`](https://r-tmap.github.io/tmap/index.html)
+- Using [`tmap`](https://r-tmap.github.io/tmap/index.html), [`sf`](https://r-spatial.github.io/sf/), [`raster`](https://cran.r-project.org/web/packages/raster/raster.pdf), and many more..
 - Using [`GeoPackage`](https://www.geopackage.org/) instead of Shapefile or Geojson
 - Using [`Postgres`](https://www.postgresql.org/) as the database
 - Using [`Earth Engine`](https://earthengine.google.com/) for high resolution processed data retrieval, [`rgee`](https://github.com/r-spatial/rgee) is an R binding package for calling Google Earth Engine API from within R
