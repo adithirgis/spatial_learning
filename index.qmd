@@ -51,7 +51,7 @@ editor_options:
 -   Why and how we model air pollution
     -   Data collection, algorithms, input data
 -   Implementation in R
-    -   Shiny apps, reproducible codes\
+    -   Shiny apps, reproducible codes
 -   Implementation in Earth Engine and QGIS
     -   Data retrieval and visualization
 :::
@@ -94,7 +94,7 @@ flowchart LR
 
 ## Data Correction {.center .center-x}
 
-![](img/corrections.png){fig-align="center"}
+![](img/corrections1.png){fig-align="center"}
 
 ## [mmaqshiny](https://joss.theoj.org/papers/10.21105/joss.02250) {.center .center-x}
 
@@ -107,6 +107,11 @@ flowchart LR
 ## Aggregation {.center .center-x}
 
 ![](img/snapping.jpg){fig-align="center"}
+
+## Mobile monitoring {.center .center-x}
+
+![](img/bc_mm.mp4){fig-align="center"}
+
 
 ## Earth Engine {.center .center-x}
 
@@ -122,11 +127,12 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 ### Spatial
 
 ::: nonincremental
--   Other variables (airport, industries)
 -   Road length (with buffers)
 -   Rail length (with buffers)
 -   Population (with buffers)
 -   Elevation
+-   Other variables (airport, industries)
+
 :::
 
 ### Spatio-temporal
@@ -148,7 +154,7 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 ## Land Use Regression {.center .center-x}
 
 ::: nonincremental
-`Air pollutants concentration = f(land use, road length, meteorological variables)`
+`Air pollutants concentration = f(land use, road length, meteorological variables, ...)`
 
 ![](img/lur.jpg){fig-align="center"}
 :::
@@ -165,12 +171,12 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 ::: {.notes}
 
 1.  Linear regression models were developed using a supervised forward selection procedure, first evaluating univariate regressions and the corrected average concentrations were evaluated against all eligible potential predictors.
-2. Here we implemented Supervised Linear Regression, Random forest. The procedure is similar for all. 
-3.  The predictor giving the highest adjusted explained variance (adjusted R\^2) was selected for inclusion in the model if the direction of effect was as defined a priori and the p-value was greater than a certain value.
-4.  Subsequently, we evaluated if any of the remaining predictor variables further improved the model adjusted R\^2 by at least 1 %.
-5.  Again, we selected the predictor giving the highest gain in adjusted R\^2, if it had a p-value greater than a value and the expected direction of effect.
+2. Here we implemented Supervised Linear Regression, Random forest. 
+3.  The predictor giving the highest adjusted explained variance (adjusted R^2^) was selected for inclusion in the model if the direction of effect was as defined a priori and the p-value was greater than a certain value.
+4.  Subsequently, we evaluated if any of the remaining predictor variables further improved the model adjusted R^2^ by at least 1 %.
+5.  Again, we selected the predictor giving the highest gain in adjusted R^2^, if it had a p-value greater than a value and the expected direction of effect.
 6.  Additional variables were not selected if they changed the direction of effect of one of the previously included variables.
-7.  This process continued until there were no more variables which fit the criteria, and improved the model adjusted R\^2 by at least 1 %.
+7.  This process continued until there were no more variables which fit the criteria, and improved the model adjusted R^2^ by at least 1 %.
 8.  As final steps, variables with a p-value above the selected value were removed from the model.
 9.  Furthermore, we checked that all Variance Inflation Factors (VIF) to ensure the absence of collinearity, and that Cook's Distance values were below generated, to ensure the absence of highly influential observations disproportionately influencing a specific variable's coefficient.
 10.  The Moran's I statistic was calculated to indicate spatial autocorrelation of the model residuals.
@@ -184,8 +190,8 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 ::: nonincremental
 
-- Model performance was evaluated by leave-one-out cross validation (LOOCV), where each site was sequentially left out from the model while the included variables were left unchanged. 
-- For mobile monitoring data we conducted 10-fold cross validation by randomly splitting the road types. 
+- Model performance was evaluated by leave-one-out cross validation (LOOCV) for ambient data, where each site was sequentially left out from the model while the included variables were left unchanged. 
+- For mobile monitoring data we conducted 10-fold cross validation by randomly splitting the road types and without any trategy. 
 - Models with adjusted R^2^ more than equal to `0.3` were used to predict at `50 m` for urban Bangalore area. 
 
 :::
@@ -193,6 +199,26 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 ## Mobile Monitoring (MM) models {.center .center-x}
 
 ![](img/output_2.jpg){fig-align="center"}
+
+## MM data visualised in R {.center .center-x}
+
+```{r warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+library(sf)
+library(here)
+library(tmap)
+tmap_mode("view")
+
+orr_bc_data <- st_read(here("sample_data", "2022_06_14_ORR_F.shp"), quiet = T)
+
+tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) + 
+  tm_shape(orr_bc_data) +
+  tm_lines(col = "BCf_mn", scale = 5, 
+           breaks = c(0, 30, 50, 60, 70, 80, 90, 1000),
+           style = "fixed", title.col = "Black carbon", textNA = "NA", 
+           palette = "viridis") 
+
+```
 
 ## Prediction map (MM) visualised using QGIS {.center .center-x}
 
@@ -204,17 +230,23 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 ## Implementation {.center .center-x}
 
-- Using `tidyverse` and parallel processing
-- Using `Geopackage` instead of shapefile or Geojson
-- Using `Postgres` as the database
-- Using `Earth Engine` for high resolution processed data retrieval
+- Using [`tidyverse`](https://www.tidyverse.org/) and parallel processing
+- Using [`tmap`](https://r-tmap.github.io/tmap/index.html)
+- Using [`GeoPackage`](https://www.geopackage.org/) instead of Shapefile or Geojson
+- Using [`Postgres`](https://www.postgresql.org/) as the database
+- Using [`Earth Engine`](https://earthengine.google.com/) for high resolution processed data retrieval, [`rgee`](https://github.com/r-spatial/rgee) is an R binding package for calling Google Earth Engine API from within R
+- Using [`R Markdown`](https://rmarkdown.rstudio.com/), parameterized  reporting for building models, and using projects for reproducibility
+
+::: footer
+:::
+
 
 ## Other models {.center .center-x}
 
 - Machine learning model:
-  - `Random forest`
+  - [`Random forest`](https://link.springer.com/article/10.1023/a:1010933404324?utm_source=getftr&utm_medium=getftr&utm_campaign=getftr_pilot)
 - Geostatistical model:
-  - `Geographically weighted regression`
+  - [`Geographically weighted regression`](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1538-4632.1996.tb00936.x)
   
 ::: {.notes}
 
@@ -231,7 +263,7 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 1. In GWR we used spatially varying coefficient values estimated using a weight function. 
 2. The weight function assigns a higher weights to points spatially closer to each other. 
 3. This function decays with Euclidean distance based on a predefined kernel function (this determines the relation between distance and weight) and bandwidth (this controls the rate at which kernel function decays). We used an exponential function for the kernel function to show decrease in weight with increasing distance. 
-4. We used 200 km × 200 km grids for the spatially-varying coefficient values of the linear regression. We used functions in the `GWmodel` package train GWR. 
+4. We used 200 km x 200 km grids for the spatially-varying coefficient values of the linear regression. We used functions in the `GWmodel` package train GWR. 
 
 :::
 
