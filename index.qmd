@@ -108,7 +108,7 @@ flowchart LR
 
 ![](img/snapping.jpg){fig-align="center"}
 
-## Mobile monitoring {.center .center-x}
+## Mobile monitoring 
 
 ![](img/bc_mm.mp4){fig-align="center"}
 
