@@ -267,6 +267,20 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 
 :::
 
+
+## Acknowledgements {.center .center-x}
+
+::: nonincremental
+
+- ILK Labs
+- CSTEP 
+- Google (funder)
+
+:::
+
+::: footer
+:::
+
 ## Thank you! {.center .center-x .nostretch background-image="img/on_road_bc.png" background-opacity="0.2"}
 
 [`r fontawesome::fa("link", a11y = "sem")` adithiru.com](https://adithirugis.netlify.app/)<br/>[`r fontawesome::fa("twitter", a11y = "sem")` \@AdithiUpadhya](https://twitter.com/AdithiUpadhya)<br/> [`r fontawesome::fa("github", a11y = "sem")` \@adithirgis](https://github.com/adithirgis)
