@@ -151,7 +151,7 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 ![](img/parameters_2.jpg){fig-align="center"}
 
-## Land Use Regression {.center .center-x}
+## Land Use Regression {visibility="hidden"}
 
 ::: nonincremental
 `Air pollutants concentration = f(land use, road length, meteorological variables, ...)`
@@ -196,11 +196,11 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 :::
 
-## Mobile Monitoring (MM) models {.center .center-x}
+## Mobile Monitoring (MM) models {visibility="hidden"}
 
 ![](img/output_2.jpg){fig-align="center"}
 
-## MM data visualised in R {.center .center-x}
+## MM data visualised in R {visibility="hidden"}
 
 ```{r warning = FALSE, message = FALSE, echo = FALSE}
 library(tidyverse)
@@ -220,11 +220,11 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 
 ```
 
-## Prediction map (MM) visualised using QGIS {.center .center-x}
+## Prediction map (MM) visualised using QGIS {visibility="hidden"}
 
 ![](img/output_3.jpg){fig-align="center"}
 
-## Prediction map {.center .center-x}
+## Prediction map {visibility="hidden"}
 
 ![](img/zoom_on_road_ufp.png){fig-align="center"}
 
@@ -288,7 +288,7 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 ::: footer
 :::
 
-## Land Use Regression Variables 1 {.center .center-x}
+## Land Use Regression Variables 1 {visibility="hidden"}
 
 ::: nonincremental
 
@@ -296,7 +296,7 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 :::
 
 
-## Land Use Regression Variables 2 {.center .center-x}
+## Land Use Regression Variables 2 {visibility="hidden"}
 
 ::: nonincremental
 
