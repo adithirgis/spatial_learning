@@ -1,7 +1,7 @@
 ---
-pagetitle: "Analysing spatial data to address environmental issues"
+pagetitle: "Analysing spatial data to address air pollution"
 author: Adithi R. Upadhya
-date: 28 Nov 2022
+date: 20 Jan 2023
 format:
   revealjs:
     self-contained: true
@@ -151,7 +151,7 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 ![](img/parameters_2.jpg){fig-align="center"}
 
-## Land Use Regression {visibility="hidden"}
+## Land Use Regression 
 
 ::: nonincremental
 `Air pollutants concentration = f(land use, road length, meteorological variables, ...)`
@@ -200,7 +200,7 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 ![](img/output_2.jpg){fig-align="center"}
 
-## MM data visualised in R {visibility="hidden"}
+## MM data visualised in R 
 
 ```{r warning = FALSE, message = FALSE, echo = FALSE}
 library(tidyverse)
@@ -220,11 +220,11 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 
 ```
 
-## Prediction map (MM) visualised using QGIS {visibility="hidden"}
+## Prediction map (MM) visualised using QGIS 
 
 ![](img/output_3.jpg){fig-align="center"}
 
-## Prediction map {visibility="hidden"}
+## Prediction map 
 
 ![](img/zoom_on_road_ufp.png){fig-align="center"}
 
@@ -288,7 +288,7 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 ::: footer
 :::
 
-## Land Use Regression Variables 1 {visibility="hidden"}
+## Land Use Regression Variables 1 
 
 ::: nonincremental
 
