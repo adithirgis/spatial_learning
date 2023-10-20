@@ -211,7 +211,7 @@ tmap_mode("view")
 
 orr_bc_data <- st_read(here("sample_data", "2022_06_14_ORR_F.shp"), quiet = T)
 
-tm_basemap(leaflet::providers$CartoDB.Positron, alpha = 0.2) + 
+tm_basemap(leaflet::providers$CartoDB.Positron) + 
   tm_shape(orr_bc_data) +
   tm_lines(col = "BCf_mn", scale = 5, 
            breaks = c(0, 30, 50, 60, 70, 80, 90, 1000),
