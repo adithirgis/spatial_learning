@@ -1,7 +1,7 @@
 ---
-pagetitle: "Analysing spatial data to address air pollution"
+pagetitle: "Building Land Use Regression models to predict air quality"
 author: Adithi R. Upadhya
-date: 20 Jan 2023
+date: 23 Oct 2023
 format:
   revealjs:
     self-contained: true
@@ -59,8 +59,8 @@ editor_options:
 ## Project details {.center .center-x}
 
 -   Set up an air quality sensor network and conducted `100+` days of mobile monitoring of air pollutants in urban Bangalore.
--   Build Land Use Regression (LUR) models which are statistical methods to estimate air pollution concentrations by relating the concentrations with several predictors, including land-use, traffic, satellite retrievals, etc.
--   Estimate air pollution for Bangalore at `50 m` for the year `2021-2022` using ambient and mobile monitoring.
+-   Build separate Land Use Regression (LUR) models for ambient and mobile monitoring data which are spatial methods to estimate air pollution concentrations by relating the concentrations with several predictors, including land-use, traffic, satellite retrievals, etc.
+-   Estimate air pollution for Bangalore at `50 m` for the year `2021-2022` using ambient and mobile monitoring data.
 
 
 ## Study Area {.center .center-x}
@@ -88,6 +88,11 @@ flowchart LR
   E --> F(prediction)
 ```
 
+## Mobile monitoring 
+
+![](img/bc_mm.mp4){fig-align="center"}
+
+
 ## Data Collection {.center .center-x}
 
 ![](img/instrument.jpg){fig-align="center"}
@@ -96,7 +101,7 @@ flowchart LR
 
 ![](img/corrections1.png){fig-align="center"}
 
-## [mmaqshiny](https://joss.theoj.org/papers/10.21105/joss.02250) {.center .center-x}
+## [mmaqshiny](https://github.com/meenakshi-kushwaha/mmaqshiny) {.center .center-x}
 
 ![](img/mmaqshiny1.jpg){fig-align="center"}
 
@@ -107,11 +112,6 @@ flowchart LR
 ## Aggregation {.center .center-x}
 
 ![](img/snapping.jpg){fig-align="center"}
-
-## Mobile monitoring 
-
-![](img/bc_mm.mp4){fig-align="center"}
-
 
 ## Earth Engine {.center .center-x}
 
@@ -166,7 +166,7 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 
 ::: nonincremental
 
-- Eeftens, M., Beelen, R., De Hoogh, K., Bellander, T., Cesaroni, G., Cirach, M., ... & Hoek, G. (2012). Development of land use regression models for PM2.5, PM2.5 absorbance, PM10 and PMcoarse in 20 European study areas; results of the ESCAPE project. Environmental Science & Technology, 46(20), 11195-11205. https://doi.org/10.1021/es301948k 
+- Eeftens, M., Beelen, R., De Hoogh, K., Bellander, T., Cesaroni, G., Cirach, M., ... & Hoek, G. (2012). Development of land use regression models for PM2.5, PM2.5 absorbance, PM10 and PMcoarse in 20 European study areas; results of the ESCAPE project. Environmental Science & Technology, 46(20), 11195-11205.
 
 ::: {.notes}
 
@@ -191,12 +191,12 @@ All remote sensing parameters were derived using Earth Engine to reduce time con
 ::: nonincremental
 
 - Model performance was evaluated by leave-one-out cross validation (LOOCV) for ambient data, where each site was sequentially left out from the model while the included variables were left unchanged. 
-- For mobile monitoring data we conducted 10-fold cross validation by randomly splitting the road types and without any trategy. 
-- Models with adjusted R^2^ more than equal to `0.3` were used to predict at `50 m` for urban Bangalore area. 
+- For mobile monitoring data we conducted 10-fold cross validation by randomly splitting the roads without any strategy. 
+- Models with adjusted R^2^ more than or equal to `0.3` were used to predict at `50 m` for urban Bangalore area. 
 
 :::
 
-## Mobile Monitoring (MM) models {visibility="hidden"}
+## Mobile Monitoring (MM) models
 
 ![](img/output_2.jpg){fig-align="center"}
 
@@ -211,7 +211,7 @@ tmap_mode("view")
 
 orr_bc_data <- st_read(here("sample_data", "2022_06_14_ORR_F.shp"), quiet = T)
 
-tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) + 
+tm_basemap(leaflet::providers$CartoDB.Positron, alpha = 0.2) + 
   tm_shape(orr_bc_data) +
   tm_lines(col = "BCf_mn", scale = 5, 
            breaks = c(0, 30, 50, 60, 70, 80, 90, 1000),
@@ -234,7 +234,7 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 - Using [`tmap`](https://r-tmap.github.io/tmap/index.html), [`sf`](https://r-spatial.github.io/sf/), [`raster`](https://cran.r-project.org/web/packages/raster/raster.pdf), and many more..
 - Using [`GeoPackage`](https://www.geopackage.org/) instead of Shapefile or Geojson
 - Using [`Postgres`](https://www.postgresql.org/) as the database
-- Using [`Earth Engine`](https://earthengine.google.com/) for high resolution processed data retrieval, [`rgee`](https://github.com/r-spatial/rgee) is an R binding package for calling Google Earth Engine API from within R
+- Using [`Earth Engine`](https://earthengine.google.com/) for high resolution processed data retrieval
 - Using [`R Markdown`](https://rmarkdown.rstudio.com/), parameterized  reporting for building models, and using projects for reproducibility
 
 ::: footer
@@ -296,7 +296,7 @@ tm_basemap(leaflet::providers$Stamen.Toner, alpha = 0.2) +
 :::
 
 
-## Land Use Regression Variables 2 {visibility="hidden"}
+## Land Use Regression Variables 2 
 
 ::: nonincremental
 
