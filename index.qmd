@@ -54,6 +54,9 @@ editor_options:
     -   Shiny apps, reproducible codes
 -   Implementation in Earth Engine and QGIS
     -   Data retrieval and visualization
+-   Published [report.](https://cstep.in/publications-details.php?id=2321)
+    -   [Google Environmental Insights Explorer](https://insights.sustainability.google/labs/airquality)
+    
 :::
 
 ## Project details {.center .center-x}
